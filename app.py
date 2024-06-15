@@ -31,7 +31,7 @@ map = dl.Map(
     ],
     center = nihonbashi,
     zoom=14, 
-    style={'height': '70vh', 'width': '150vh', 'margin': '0 auto'},
+    style={'height': '70vh', 'width': '100%', 'margin': '0 auto'},
     
 )
 
