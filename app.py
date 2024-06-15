@@ -45,6 +45,7 @@ description = html.Ul(children = [
     html.Li('2024年4月から同年6月半ばにかけての東京都の不審者情報を地図上に表示します'),
     html.Li('マーカーをクリックすると不審者情報を表示します'),
     html.Li('矢印ボタンを押すと現在位置を取得し周辺を表示します'),
+    html.Li(children = ['ソースコードは', html.A('https://github.com/bmountain/fushin', href = 'https://github.com/bmountain/fushin'), 'に公開しています'])
     html.Br(),
     html.H3('データについて'),
     html.Li(children = ['データは', html.A('日本不審者情報センター', href = 'https://fushinsha-joho.co.jp/', target = '_blank'), 'から取得しました']),
