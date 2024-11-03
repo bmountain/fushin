@@ -10,7 +10,16 @@ class FushinSpider(scrapy.Spider):
     DEBUG_NUM_ARTICLE = 3 # デバッグモードで取得する一つの年月あたりの記事数
     
     def parse_ym(self, response):
-        '''年月ページにおける個別記事の見出し・URLを取得.URLからhtmlを取得しタイトルと日付を取得'''
+        """
+        年月ページにおける個別記事の見出し・URLを取得。
+        URLからHTMLを取得しタイトルと日付を取得。
+
+        Args:
+            response (_type_): _description_
+
+        Yields:
+            _type_: _description_
+        """
         post_list = [post for post in response.css('li')]
 
         if self.DEBUG:
@@ -31,7 +40,15 @@ class FushinSpider(scrapy.Spider):
                 yield result
 
     def parse(self, response):
-        '''トップページのドロップダウンから年月ページのURLのリストを作成しURLをparse_ymに渡す'''
+        """
+        トップページのドロップダウンから年月ページのURLのリストを作成しURLをparse_ymに渡す
+
+        Args:
+            response (_type_): _description_
+
+        Yields:
+            _type_: _description_
+        """
         ym_list = response.xpath('//select[@id="ym_select"]/option/@value').extract()
         ym_url_list = ['https://fushinsha-joho.co.jp/?ym=' + ym for ym in ym_list]
         if self.DEBUG:
