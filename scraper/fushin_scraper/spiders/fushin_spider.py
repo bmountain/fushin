@@ -1,5 +1,6 @@
-import scrapy
 import requests
+import scrapy
+
 
 class FushinSpider(scrapy.Spider):
     name = "fushin_spider"
@@ -10,16 +11,6 @@ class FushinSpider(scrapy.Spider):
     DEBUG_NUM_ARTICLE = 3 # デバッグモードで取得する一つの年月あたりの記事数
     
     def parse_ym(self, response):
-        """
-        年月ページにおける個別記事の見出し・URLを取得。
-        URLからHTMLを取得しタイトルと日付を取得。
-
-        Args:
-            response (_type_): _description_
-
-        Yields:
-            _type_: _description_
-        """
         post_list = [post for post in response.css('li')]
 
         if self.DEBUG:
@@ -27,28 +18,19 @@ class FushinSpider(scrapy.Spider):
         for post in post_list:
             # 月別ページで表示される個別記事の見出し・URLを取得
             _url = post.css('a::attr(href)').extract_first().strip()
-            _title = post.css('a::text').extract_first().strip()
+            _short_title = post.css('a::text').extract_first().strip()
 
             # 個別記事の情報を取得
             if _url is not None:
                 response_detail = requests.get(_url, verify = False)
                 response_detail = scrapy.http.TextResponse(body = response_detail.content, url = _url)
-                _title_detail = response_detail.css('h1::text').extract_first().strip()
-                _date = response_detail.css('label.articleDate__date>bdi::text').extract_first().strip()
+                _long_title = response_detail.css('h1::text').extract_first().strip()
+                _article_date = response_detail.css('dd.articleDate__time>bdi::text').extract_first().strip()
 
-                result = dict(date = _date, title = _title, title_detail = _title_detail, url = _url)
+                result = dict(article_date = _article_date, short_title = _short_title, long_title = _long_title, url = _url)
                 yield result
 
     def parse(self, response):
-        """
-        トップページのドロップダウンから年月ページのURLのリストを作成しURLをparse_ymに渡す
-
-        Args:
-            response (_type_): _description_
-
-        Yields:
-            _type_: _description_
-        """
         ym_list = response.xpath('//select[@id="ym_select"]/option/@value').extract()
         ym_url_list = ['https://fushinsha-joho.co.jp/?ym=' + ym for ym in ym_list]
         if self.DEBUG:

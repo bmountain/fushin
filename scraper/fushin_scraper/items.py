@@ -5,8 +5,9 @@
 
 import scrapy
 
+
 class Post(scrapy.Item):
-    date = scrapy.Field()
-    title = scrapy.Field()
-    title_detail = scrapy.Field()
+    article_date = scrapy.Field()
+    short_title = scrapy.Field()
+    long_title = scrapy.Field()
     url = scrapy.Field()

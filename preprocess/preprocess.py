@@ -11,9 +11,21 @@ pd.options.mode.copy_on_write = True
 
 
 def get_inside_par(s: str) -> str:
-    regex = r"（.+\）"
-    return re.search(regex, s).group().strip("（）")
+    """
+    文字列が全角丸括弧を含むならその中の文字列を返し、そうでなければから文字列を返す。
 
+    Args:
+        s (str): この文字列に含まれる丸括弧の中を取り出す。
+
+    Returns:
+        str: 丸括弧の中身。
+    """
+    regex = r"（.+\）"
+    match = re.search(regex, s)
+    if match is not None:
+        return match.group().strip('（）')
+    else:
+        return ''
 
 def add_datetime_tz(data):
     # title_detailの前半と後半を分離する
@@ -35,16 +47,41 @@ def add_datetime_tz(data):
     )
 
     # タイムゾーン取得
-    def get_tz(s):
+    def get_tz(s: str) -> str:
+        """
+        文字「日」に続く文字列を返す。
+
+        Args:
+            s (str): タイムゾーン情報を含む文字列
+
+        Returns:
+            str: タイムゾーン
+        """
         regex = r"(?<=日)(.*)"
-        return re.search(regex, s).group()
+        match = re.search(regex, s)
+        if match is not None:
+            return match.group()
+        else:
+            return ''
 
     data["tz"] = data["incident_date"].apply(get_tz)
 
-    # incident_dateから日付を抽出
-    def get_date(s):
+    def get_date(s: str) -> str:
+        """
+        事件発生日から日付を抽出する
+
+        Args:
+            s (str): incident_date
+
+        Returns:
+            str: 日付
+        """
         regex = r".+日"
-        return re.search(regex, s).group()
+        match = re.search(regex, s)
+        if match is not None:
+            return match.group()
+        else:
+            return ''
 
     data["incident_date"] = (
         data["incident_date"]
