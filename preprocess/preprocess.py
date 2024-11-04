@@ -93,7 +93,7 @@ def add_address(data):
     return data
 
 
-# 事件の内容
+# 事件の内容を取得
 def add_incident(data):
     data["incident"] = data["title"].apply(get_inside_par)
     data.rename(columns={"date": "article_date"}, inplace=True)
@@ -121,6 +121,19 @@ def add_coordinate(data):
     )
     return data
 
+def cleaning(data):
+    columns = [
+        'article_date',
+        'incident_date',
+        'tz',
+        'content',
+        'animal',
+        'lon',
+        'lat',
+        'url',
+    ]
+    return data[columns]
+
 
 data = pd.read_csv("./output.csv", encoding="utf_8")
 data = add_datetime_tz(data)
@@ -128,4 +141,5 @@ data = add_address(data)
 data = add_incident(data)
 jageocoder.init()
 data = add_coordinate(data)
+data = cleaning(data)
 data.to_csv("./data_processed_dev.csv", index=False)

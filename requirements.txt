@@ -1,3 +1,4 @@
+fastcore
 scrapy
 pandas
 jp_pref
